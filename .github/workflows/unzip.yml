@@ -1,0 +1,29 @@
+name: Extract Zip File
+
+on:
+  push:
+    paths:
+      - '**.zip'
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Extract zip file
+      run: |
+        sudo apt-get install unzip
+        unzip dotnetloanapp_Demo.zip -d extracted-files
+
+    - name: Commit extracted files
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        mv extracted-files/* .
+        rm -rf extracted-files your-zip-file.zip
+        git add .
+        git commit -m "Extracted zip file"
+        git push
